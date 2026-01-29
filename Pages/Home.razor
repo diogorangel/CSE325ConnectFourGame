@@ -1,0 +1,21 @@
+﻿@page "/"
+@inject GameState State
+@implements IDisposable
+
+<h1>Connect Four</h1>
+<p>Click a column to drop your piece. First to connect four wins!</p>
+<Board />
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Subscribe to the event so the UI refreshes when PlayPiece is called
+        State.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe when the page is closed to prevent memory leaks
+        State.OnChange -= StateHasChanged;
+    }
+}

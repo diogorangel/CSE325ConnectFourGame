@@ -1,0 +1,41 @@
+@inject GameState State
+
+<div class="game-container">
+    <h3>@State.WinningMessage</h3>
+    <p>Current Turn: Player @State.CurrentPlayer</p>
+
+    <div class="board">
+        @for (int j = 0; j < 7; j++)
+        {
+            int col = j;
+            <div class="column" @onclick="() => State.PlayPiece(col)">
+                @for (int i = 0; i < 6; i++)
+                {
+                    <div class="cell player-@State.Board[i, j]"></div>
+                }
+            </div>
+        }
+    </div>
+
+    <button @onclick="State.ResetGame">Reset Game</button>
+
+    <div class="history">
+        <h4>Move History</h4>
+        <ul>
+            @foreach (var move in State.MoveHistory)
+            {
+                <li>@move</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<style>
+    .board { display: flex; background: blue; padding: 10px; width: fit-content; }
+    .column { display: flex; flex-direction: column; cursor: pointer; }
+    .column:hover { background: rgba(255,255,255,0.2); }
+    .cell { width: 50px; height: 50px; background: white; border-radius: 50%; margin: 5px; }
+    .player-1 { background: red; }
+    .player-2 { background: yellow; }
+    .history { margin-top: 20px; border: 1px solid #ddd; padding: 10px; height: 150px; overflow-y: scroll; }
+</style>

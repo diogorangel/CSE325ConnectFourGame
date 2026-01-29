@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Publish App
+      run: dotnet publish -c Release -o release
+
+    # Fix for GitHub Pages routing
+    - name: Change base-tag in index.html from / to repo name
+      run: sed -i 's/<base href="\/" \/>/<base href="\/diogorangel\/" \/>/g' release/wwwroot/index.html
+
+    - name: Upload to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: release/wwwroot
+        branch: gh-pages
