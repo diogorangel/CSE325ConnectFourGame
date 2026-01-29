@@ -20,7 +20,7 @@ jobs:
 
     # Fix for GitHub Pages routing
     - name: Change base-tag in index.html from / to repo name
-      run: sed -i 's/<base href="\/" \/>/<base href="\/diogorangel\/" \/>/g' release/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/CSE325ConnectFourGame\/" \/>/g' release/wwwroot/index.html
 
     - name: Upload to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
