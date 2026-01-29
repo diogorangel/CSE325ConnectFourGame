@@ -4,9 +4,14 @@ on:
   push:
     branches: [ "main" ]
 
+# Grant permission to the action to push to the gh-pages branch
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
 
@@ -18,9 +23,17 @@ jobs:
     - name: Publish App
       run: dotnet publish -c Release -o release
 
-    # Fix for GitHub Pages routing
-    - name: Change base-tag in index.html from / to repo name
+    # Sets the base path so the browser knows where to find files in your repo subfolder
+    - name: Change base-tag in index.html
       run: sed -i 's/<base href="\/" \/>/<base href="\/CSE325ConnectFourGame\/" \/>/g' release/wwwroot/index.html
+
+    # Essential for Blazor: Tells GitHub NOT to ignore folders starting with underscores (like _framework)
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
+
+    # Fixes the 404 error when refreshing the page on GitHub Pages
+    - name: Create 404.html from index.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
 
     - name: Upload to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
